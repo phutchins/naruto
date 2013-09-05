@@ -24,14 +24,18 @@ action :create do
   # Grab notifications to forward
   @immediate_notifications = new_resource.immediate_notifications
   @delayed_notifications   = new_resource.delayed_notifications
+  Chef::Log.debug("Using Variables: #{variables}")
 
   Chef::Log.debug("Looking for templates in #{base_dir}")
   Find.find(base_dir) do |path|
     next unless path =~ /\.erb$/
 
     # Ignore files that match paterns in the provided array
-    ignore_file.each do |regex|
-      next if path =~ /regex/
+    unless ignore_file.nil? then
+      ignore_file.each do |regex|
+        next if path =~ /regex/
+        Chef::Log.debug("Ignoring file: #{path}")
+      end
     end
 
     Chef::Log.debug("Processing file #{path}")
