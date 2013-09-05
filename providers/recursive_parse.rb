@@ -18,6 +18,7 @@ end
 action :create do
   base_dir = new_resource.base_dir
   variables = new_resource.variables
+  ignore_file = new_resource.ignore_file
   changed = false
 
   # Grab notifications to forward
@@ -27,8 +28,11 @@ action :create do
   Chef::Log.debug("Looking for templates in #{base_dir}")
   Find.find(base_dir) do |path|
     next unless path =~ /\.erb$/
-    # Ignore these things (take as attribute and loop through array of ignores)
-    #next if path =~ /something_to_ignore$/
+
+    # Ignore files that match paterns in the provided array
+    ignore_file.each do |regex|
+      next if path =~ /regex/
+    end
 
     Chef::Log.debug("Processing file #{path}")
     target = path.sub(/\.erb$/,'')
@@ -49,7 +53,9 @@ action :create do
     if new != old then
       Chef::Log.info("Template contents changed, writing #{target}")
       ::File.open(target, "w").write(new)
-      # Find a better way to preserve owner and set permissions
+      # Grab the permissions off of the origional file and save them for the new file
+      # Possibly add another hash variable to allow setting of file permissions according to extension
+      # Add a default permission, owner and user for all files that we process
       #FileUtils.chown(node["project"]["user"], node["project"]["group"], target)
       #if target =~ /.\.sh$/i then
       #  FileUtils.chmod "ug=wrx,o=r", target
