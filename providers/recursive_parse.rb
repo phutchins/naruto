@@ -45,8 +45,10 @@ action :create do
     old = ::File.read(target) rescue nil
     begin
       new = erb.evaluate(variables)
-    rescue NameError
-      Chef::Log.debug("Unable to process template: #{path}")
+    rescue NameError => exception
+      Chef::Log.info("Unable to process template: #{path}")
+      Chef::Log.info("Error: #{$!}")
+      Chef::Log.debug("Backtrace:\n\t#{exception.backtrace.join("\n\t")}")
     rescue RuntimeError
       Chef::Log.debug("Ignoring file #{path} due to RuntimeError")
     rescue LocalJumpError
