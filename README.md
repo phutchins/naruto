@@ -30,3 +30,8 @@ Add app or template specific values to only be parsed into certain templates
       variables myapp_variables
       notifies :restart, 'service[myapp]'
     end
+
+#### Optional resource parameters
+This allows you to ignore files or patterns matched in a file name. It is a regex and will match your
+  entry anywhere in the file's path or name.
+    ignore_file ["file.one", "otherfile.two"]
