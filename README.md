@@ -19,14 +19,14 @@ Add app or template specific values to only be parsed into certain templates
     node.set['mycookbook']['common']['log_dir'] = '/var/log'
     node.set['mycookbook']['common']['tmp_dir'] = '/tmp'    
 
-## Create merged hash of attributes that we need to parse into the templates
-    social_variables = {}
-    social_variables = node['mycookbook']['common'].to_hash.merge(node['mycookbook']['myapp'].to_hash)
+#### Create merged hash of attributes that we need to parse into the templates
+    myapp_variables = {}
+    myapp_variables = node['mycookbook']['common'].to_hash.merge(node['mycookbook']['myapp'].to_hash)
 
 ## Resource Usage
-    naruto_recursive_parse 'drooler_templates' do
+    naruto_recursive_parse 'myapp_templates' do
       action :create
-      base_dir "/opt/social"
-      variables social_variables
-      notifies :restart, 'service[drooler]'
+      base_dir "/opt/myapp"
+      variables myapp_variables
+      notifies :restart, 'service[myapp]'
     end
