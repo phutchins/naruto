@@ -6,9 +6,9 @@
   social_variables = node['myattr']['common'].to_hash.merge(node['myattr']['drooler'].to_hash)
 
 ## Resource Usage
-  naruto_recursive_parse 'drooler_templates' do
-    action :create
-    base_dir "/opt/social"
-    variables social_variables
-    notifies :restart, 'service[drooler]'
-  end
+    naruto_recursive_parse 'drooler_templates' do
+      action :create
+      base_dir "/opt/social"
+      variables social_variables
+      notifies :restart, 'service[drooler]'
+    end
